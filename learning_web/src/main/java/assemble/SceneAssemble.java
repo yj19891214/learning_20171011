@@ -1,5 +1,7 @@
 package assemble;
 
+import factory.ModuleAssembleFactory;
+import factory.ModuleQueryDO;
 import process.ModulePostProcessor;
 import process.SceneCustomizeProcess;
 import process.ScenePreProcessor;
@@ -17,6 +19,13 @@ import java.util.Map;
  * Created by Administrator on 2017/11/12.
  */
 public class SceneAssemble extends BaseAssemble<List<SceneQueryDO>, List<SceneDO>> implements MultiRuleStrategy {
+    private static SceneAssemble instance = new SceneAssemble();
+    public static SceneAssemble getInstance(){
+        return instance;
+    }
+    private SceneAssemble() {
+    }
+
     @Override
     public List<EnrichStrategy> getRichRuleStrategies() {
         return null;
@@ -62,6 +71,13 @@ public class SceneAssemble extends BaseAssemble<List<SceneQueryDO>, List<SceneDO
     }
 
     private List<ModuleDO> doAssemble(List<ResourceModuleDO> resourceModuleDOS, ResourceSceneDO subScene, SceneQueryDO sceneQureyDO) {
+        for (int index = 0; index <resourceModuleDOS.size() ; index++) {
+            ResourceModuleDO resModuleDO = resourceModuleDOS.get(index);
+           BaseAssemble moduleAssemble= ModuleAssembleFactory.getModuleAssemble(resModuleDO,subScene);
+           moduleAssemble.process(ModuleQueryDO.of(sceneQureyDO.resourceSceneDO,subScene,resModuleDO));
+
+        }
+
         return null;
     }
 
